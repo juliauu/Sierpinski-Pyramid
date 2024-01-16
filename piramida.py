@@ -60,7 +60,7 @@ def draw():
 
 def load_texture():
     texture_surface = pygame.image.load("bricks.jpg") # wczytuje teksture z pliku
-    texture_data = pygame.image.tostring(texture_surface, "RGB", 1)
+    texture_data = pygame.image.tostring(texture_surface, "RGB", True)
     width, height = texture_surface.get_size()
 
     # wlaczenie i konfiguracja tekstury
@@ -80,16 +80,14 @@ def toggle_texture(): # przelaczanie wlaczania i wylaczania tekstury
 
 def set_lighting():
     # ustawienia dla swiatla kierunkowego (GL_LIGHT0)
-    glLightfv(GL_LIGHT0, GL_POSITION, (-1.0, -1.0, -1.0, 0.0))  # kierunek
+    glLightfv(GL_LIGHT0, GL_POSITION, (0.0, 0.0, 1.0, 0.0))  # kierunkowe od przodu
     glLightfv(GL_LIGHT0, GL_DIFFUSE, (1.0, 1.0, 1.0, 1.0))  # kolor swiatla rozproszonego bialy
-    glLightfv(GL_LIGHT0, GL_SPECULAR, (1.0, 1.0, 1.0, 1.0))  # kolor swiatla odbitego bialy
+    glLightfv(GL_LIGHT0, GL_SPECULAR, (1.0, 1.0, 1.0, 1.0))  # kolor swiatla wypuklego
 
     # ustawienia dla swiatla punktowego (GL_LIGHT1)
     glLightfv(GL_LIGHT1, GL_POSITION, (1.0, 1.0, 1.0, 1.0))  # pozycja swiatla punktowego
     glLightfv(GL_LIGHT1, GL_DIFFUSE, (1.0, 1.0, 1.0, 1.0))  # kolor swiatla rozproszonego bialy
-    glLightfv(GL_LIGHT1, GL_SPECULAR, (1.0, 1.0, 1.0, 1.0))  # kolor swiatla odbitego bialy
-    glEnable(GL_LIGHT1)
-
+    glLightfv(GL_LIGHT1, GL_SPECULAR, (1.0, 1.0, 1.0, 1.0))  # kolor swiatla wypuklego
 
 
 def main():
@@ -103,6 +101,7 @@ def main():
 
     glEnable(GL_LIGHTING)
     glEnable(GL_LIGHT0)
+    glEnable(GL_LIGHT1)
     glEnable(GL_COLOR_MATERIAL)
 
     glEnable(GL_DEPTH_TEST)
@@ -118,33 +117,33 @@ def main():
                     toggle_texture()
                     
                 if event.key == pygame.K_UP:
-                    glTranslatef(0,0,0.1)
+                    glTranslatef(0,0.1,0)
 
                 if event.key == pygame.K_DOWN:
-                    glTranslatef(0,0,-0.1)
+                    glTranslatef(0,-0.1,0)
 
                 if event.key == pygame.K_LEFT:
-                    glTranslatef(0.1,0,0)
-
-                if event.key == pygame.K_RIGHT:
                     glTranslatef(-0.1,0,0)
 
-            elif event.type == pygame.MOUSEBUTTONDOWN:
-                if event.button == 4:  # Scroll up
+                if event.key == pygame.K_RIGHT:
+                    glTranslatef(0.1,0,0)
+
+                if event.key == pygame.K_w:  # Scroll up
                     glTranslatef(0.0, 0.0, 0.1)
-                elif event.button == 5:  # Scroll down
+
+                if event.key == pygame.K_s:  # Scroll down
                     glTranslatef(0.0, 0.0, -0.1)
 
-        if n < 4:
+        if n==0:
+            glRotatef(0.5*0.05, 1, 1, 1)
+        elif n<4:
             glRotatef(n * 0.05, 1, 1, 1)
         else:
             glRotatef(n * n * 0.05, 1, 1, 1)
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
         draw()
-
         set_lighting()
-        glDisable(GL_COLOR_MATERIAL)
         pygame.display.flip()
 
 
