@@ -13,7 +13,7 @@ tex_coords = [
     (0.5, 0.5)
 ]
 
-def divide(v1, v2, v3, v4, n): # rekurencyjne dzielenie scian czworoscianu
+def divide(v1, v2, v3, v4, n): 
     v12 = [(v1[i] + v2[i]) / 2 for i in range(3)]
     v23 = [(v2[i] + v3[i]) / 2 for i in range(3)]
     v31 = [(v3[i] + v1[i]) / 2 for i in range(3)]
@@ -27,9 +27,9 @@ def divide(v1, v2, v3, v4, n): # rekurencyjne dzielenie scian czworoscianu
         divide(v31, v23, v3, v34, n - 1)
         divide(v14, v24, v34, v4, n - 1)
     else:
-        tetra(v1, v2, v3, v4) # rysuj czworoscian
+        tetra(v1, v2, v3, v4) 
 
-def triangle(a, b, c): # rysuj trojkat z podanymi wierzcholkami
+def triangle(a, b, c):
     glBegin(GL_TRIANGLES)
     glTexCoord2fv(tex_coords[0])
     glVertex3fv(a)
@@ -41,15 +41,15 @@ def triangle(a, b, c): # rysuj trojkat z podanymi wierzcholkami
     glVertex3fv(c)
     glEnd()
 
-def tetra(v1, v2, v3, v4): # rysuj czworoscian zlozony z 4 trojkatow
-    glColor3f(1, 0.5, 0.6) # kolor
-    triangle(v1, v2, v3) # pierwszy trojkat
-    triangle(v1, v3, v4) # drugi trojkat
-    triangle(v2, v3, v4) # trzeci trojkat
-    triangle(v1, v2, v4) # czwarty trojkat
+def tetra(v1, v2, v3, v4): 
+    glColor3f(1, 0.5, 0.6)
+    triangle(v1, v2, v3) 
+    triangle(v1, v3, v4) 
+    triangle(v2, v3, v4) 
+    triangle(v1, v2, v4) 
 
 def draw():
-    p = [ # wierzcholki czworoscianu
+    p = [
         [-0.65, -0.5, 0.5],
         [0.65, -0.5, 0.5],
         [0, 0.6, 0.5],
@@ -59,18 +59,18 @@ def draw():
     divide(p[0], p[1], p[2], p[3], n)
 
 def load_texture():
-    texture_surface = pygame.image.load("bricks.jpg") # wczytuje teksture z pliku
+    texture_surface = pygame.image.load("bricks.jpg") 
     texture_data = pygame.image.tostring(texture_surface, "RGB", True)
     width, height = texture_surface.get_size()
 
-    # wlaczenie i konfiguracja tekstury
+    
     glEnable(GL_TEXTURE_2D)
     glBindTexture(GL_TEXTURE_2D, glGenTextures(1))
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, texture_data)
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR)
 
-def toggle_texture(): # przelaczanie wlaczania i wylaczania tekstury
+def toggle_texture():
     global texture_enabled
     texture_enabled = not texture_enabled
     if texture_enabled:
@@ -79,21 +79,19 @@ def toggle_texture(): # przelaczanie wlaczania i wylaczania tekstury
         glDisable(GL_TEXTURE_2D)
 
 def set_lighting():
-    # ustawienia dla swiatla kierunkowego (GL_LIGHT0)
-    glLightfv(GL_LIGHT0, GL_POSITION, (0.0, 0.0, 1.0, 0.0))  # kierunkowe od przodu
-    glLightfv(GL_LIGHT0, GL_DIFFUSE, (1.0, 1.0, 1.0, 1.0))  # kolor swiatla rozproszonego bialy
-    glLightfv(GL_LIGHT0, GL_SPECULAR, (1.0, 1.0, 1.0, 1.0))  # kolor swiatla wypuklego
+    glLightfv(GL_LIGHT0, GL_POSITION, (0.0, 0.0, 1.0, 0.0))  
+    glLightfv(GL_LIGHT0, GL_DIFFUSE, (1.0, 1.0, 1.0, 1.0)) 
+    glLightfv(GL_LIGHT0, GL_SPECULAR, (1.0, 1.0, 1.0, 1.0))  
 
-    # ustawienia dla swiatla punktowego (GL_LIGHT1)
-    glLightfv(GL_LIGHT1, GL_POSITION, (1.0, 1.0, 1.0, 1.0))  # pozycja swiatla punktowego
-    glLightfv(GL_LIGHT1, GL_DIFFUSE, (1.0, 1.0, 1.0, 1.0))  # kolor swiatla rozproszonego bialy
-    glLightfv(GL_LIGHT1, GL_SPECULAR, (1.0, 1.0, 1.0, 1.0))  # kolor swiatla wypuklego
+    glLightfv(GL_LIGHT1, GL_POSITION, (1.0, 1.0, 1.0, 1.0))  
+    glLightfv(GL_LIGHT1, GL_DIFFUSE, (1.0, 1.0, 1.0, 1.0))  
+    glLightfv(GL_LIGHT1, GL_SPECULAR, (1.0, 1.0, 1.0, 1.0))  
 
 
 def main():
     global n
     n = int(input(" "))
-    pygame.init() #zbiera informacje o urzadzeniu
+    pygame.init()
     display = (800, 600)
     pygame.display.set_mode(display, DOUBLEBUF | OPENGL)
     gluPerspective(45, (display[0] / display[1]), 0.1, 50.0)
@@ -128,10 +126,10 @@ def main():
                 if event.key == pygame.K_RIGHT:
                     glTranslatef(0.1,0,0)
 
-                if event.key == pygame.K_w:  # Scroll up
+                if event.key == pygame.K_w:  
                     glTranslatef(0.0, 0.0, 0.1)
 
-                if event.key == pygame.K_s:  # Scroll down
+                if event.key == pygame.K_s: 
                     glTranslatef(0.0, 0.0, -0.1)
 
         if n==0:
